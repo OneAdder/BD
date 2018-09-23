@@ -79,33 +79,28 @@ def insert_seans():
     while True:
         hall_id = input('Hall number: ')
         film =  input('Film: ')
-        film_id = [list(row) for row in c.execute('SELECT id FROM film WHERE film = ?', (film,))][0]
+        film_id = [list(row) for row in c.execute('SELECT id FROM film WHERE name = ?', (film,))][0][0]
         if not film:
             film =  input('There is no such film. Try again: ')
         date = str(datetime.datetime.now().date())
         time = input('Time: ')
         while True:
             cost = input('Cost in RON: ')
-            if not isinstance(cost, int):
-                cost = input('Just write the number! ')
-            else:
-                break
+            break
         while True:
             tickets_sold = input('Amount of sold tickets: ')
-            if not isinstance(tickets_sold, int):
-                tickets_sold = input('Just write the number! ')
-            else:
-                break
-        tickets = [list(row) for row in c.execute('SELECT seats FROM hall WHERE id = ?', (hall_id,))][0] - tickets_sold
+            break
+        tickets = int([list(row) for row in c.execute('SELECT seats FROM hall WHERE id = ?', (hall_id,))][0][0]) - int(tickets_sold)
         c.execute('''INSERT INTO seans (hall_id, film_id, date, time, cost, tickets)
                   VALUES (?, ?, ?, ?, ?, ?)
-                  ''', (hall_id, film_id, date, time, cost, tickets))
+                  ''', (int(hall_id), int(film_id), date, time, int(cost), int(tickets)))
+        conn.commit()
         if hall_id == '':
             break
     conn.commit()
     print('Seansy written successfully!')
 
 if __name__ == '__main__':
-    insert_films()
-    insert_hall()
+#    insert_films()
+#    insert_hall()
     insert_seans()
