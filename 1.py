@@ -1,4 +1,5 @@
 import sqlite3
+import datetime
 
 conn = sqlite3.connect('db.sqlite')
 c = conn.cursor()
@@ -48,7 +49,7 @@ def create_all():
     create_hall()
     print('\nAll tables created!')
 
-def insert():
+def insert_films():
     while True:
         name = input('Film name: ')
         length = input('Length: ')
@@ -60,7 +61,51 @@ def insert():
                   ''', (name, length, abstract, rating, age))
         if name == '':
             break
+    conn.commit()
     print('Films written successfully!')
 
+def insert_hall():
+    while True:
+        seats = input('Amount of seats: ')
+        c.execute('''INSERT INTO hall (seats)
+                  VALUES (?)
+                  ''', (seats,))
+        if seats == '':
+            break
+    conn.commit()
+    print('Halls written successfully!')
+
+def insert_seans():
+    while True:
+        hall_id = input('Hall number: ')
+        film =  input('Film: ')
+        film_id = [list(row) for row in c.execute('SELECT id FROM film WHERE film = ?', (film,))][0]
+        if not film:
+            film =  input('There is no such film. Try again: ')
+        date = str(datetime.datetime.now().date())
+        time = input('Time: ')
+        while True:
+            cost = input('Cost in RON: ')
+            if not isinstance(cost, int):
+                cost = input('Just write the number! ')
+            else:
+                break
+        while True:
+            tickets_sold = input('Amount of sold tickets: ')
+            if not isinstance(tickets_sold, int):
+                tickets_sold = input('Just write the number! ')
+            else:
+                break
+        tickets = [list(row) for row in c.execute('SELECT seats FROM hall WHERE id = ?', (hall_id,))][0] - tickets_sold
+        c.execute('''INSERT INTO seans (hall_id, film_id, date, time, cost, tickets)
+                  VALUES (?, ?, ?, ?, ?, ?)
+                  ''', (hall_id, film_id, date, time, cost, tickets))
+        if hall_id == '':
+            break
+    conn.commit()
+    print('Seansy written successfully!')
+
 if __name__ == '__main__':
-    insert()
+    insert_films()
+    insert_hall()
+    insert_seans()
