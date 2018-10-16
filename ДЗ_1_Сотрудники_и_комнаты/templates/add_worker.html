@@ -1,14 +1,16 @@
 {% with messages = get_flashed_messages() %}
     {% if messages %}
-        {% for message in messages %}
-            <li><span> {{ message }} </span></li>
+        {% for messag in messages %}
+            <script> alert("{{ messag }}"); </script>
         {% endfor %}
     {% endif %}
 {% endwith %}
 
-<form>
-    Name:<input type="text" name="name"><br>
-    Отчество:<input type="text" name="patronymic"><br>
-    Surename<input type="text" name="surename"><br>
-    <input type="submit" value="Add">
+<li><span>{{ message|safe }}</span></li>
+
+<form class="form-container" method="post">
+    Имя:<input class="form-field" type="text" name="name"><br>
+    Отчество:<input class="form-field" type="text" name="patronymic"><br>
+    Фамилия:<input class="form-field" type="text" name="surename"><br>
+    <input class="button" type="submit" value="Add">
 </form>
