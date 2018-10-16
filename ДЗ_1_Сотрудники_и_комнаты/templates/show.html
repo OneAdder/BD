@@ -1,3 +1,4 @@
+<a href="/">На главную</a>
 <table>
     <tr>
         <th>Номер</th>
@@ -5,6 +6,7 @@
         <th>Отчество</th>
         <th>Фамилия</th>
         <th>Комната</th>
+        <th></th>
     </tr>
     {% for row in table %}
     <tr>
@@ -13,6 +15,7 @@
         <td>{{ row[2] }}</td>
         <td>{{ row[3] }}</td>
         <td>{{ row[4] }}</td>
+        <td> <a href="delete={{ row[0] }}">УДОЛИТЬ</a></td> </td>
     </tr>
     {% endfor %}
 </table>

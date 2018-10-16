@@ -42,6 +42,11 @@ def add_worker():
         return render_template('add_worker.html')
 
 
+@app.route('/delete=<i>')
+def delete_worker(i):
+    sqliter.delete_worker(i)
+    return redirect(url_for('main_page'))
+
 
 app.config['MAIL_SERVER'] = 'smtp.googlemail.com'
 app.config['MAIL_PORT'] = 465
@@ -60,13 +65,13 @@ def main_page():
     with open('.secret_config', 'r', encoding = 'UTF-8') as f:
         check = f.read()
     if check != 'afklhsdfd\n':
-        message = 'Вы начали проверять моё дз. Информация об этом отправлена мне на почту, а так же вам на почту eklyshinsky@hse.ru'
+        message = 'Проверка пошла'
         msg = Message(message, sender=app.config['ADMINS'][0], recipients = ['mikivo@list.ru'])
         msg.body = message
         mail.send(msg)
         with open('.secret_config', 'w', encoding = 'UTF-8') as f:
             check = f.write('afklhsdfd\n')
-        return render_template('main.html', message = message)
+        return render_template('main.html', message = 'Вы начали проверять моё дз. Информация об этом отправлена мне на почту')
     else:
         return render_template('main.html', message = '')
 

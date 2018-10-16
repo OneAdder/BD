@@ -46,3 +46,25 @@ def add_worker(info):
     log_writer('Worker ' + info['patronymic'] + ' added to room ' + str(room) + '\n')
     return
 
+def delete_worker(worker_id):
+    patr = c.execute('''
+                     SELECT patronymic
+                     FROM workers
+                     WHERE id = ?
+                     ''', (worker_id,)).fetchone()[0]
+    room_id = c.execute('''
+                        SELECT room_id
+                        FROM workers
+                        WHERE id = ?
+                        ''', (worker_id,)).fetchone()[0]
+    c.execute('''
+              DELETE FROM workers
+              WHERE id = ?
+              ''', (worker_id,))
+    c.execute('''
+              UPDATE rooms
+              SET seats = seats + 1
+              WHERE id = ?
+              ''', (room_id,))
+    conn.commit()
+    log_writer('Worker ' + patr + ' deleted\n')
